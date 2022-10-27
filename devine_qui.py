@@ -1,6 +1,7 @@
 from random import shuffle
 
 from personnages import CARACTERISTIQUES
+import random
 
 
 def types_caracteristiques_ordre_aleatoire():
@@ -17,7 +18,12 @@ def types_caracteristiques_ordre_aleatoire():
     Returns:
         list: La liste des types de caractéristiques
     """
-    # VOTRE CODE ICI
+    random.shuffle(list(CARACTERISTIQUES.keys()))
+    print(list)
+    return list
+
+
+types_caracteristiques_ordre_aleatoire()
 
 
 def valeurs_ordre_aleatoire(type_caracteristique):
@@ -36,6 +42,9 @@ def valeurs_ordre_aleatoire(type_caracteristique):
         list: La liste des valeurs possibles pour ce type de caractéristique
     """
     # VOTRE CODE ICI
+    CARACT3 = list.copy(CARACTERISTIQUES[type_caracteristique])
+    random.shuffle(CARACT3[type_caracteristique])
+    return list
 
 
 def possede(donnees_personnage, type_caracteristique, valeur_caracteristique):
@@ -55,9 +64,14 @@ def possede(donnees_personnage, type_caracteristique, valeur_caracteristique):
     Returns:
         bool: True si le personnage possède la caractéristique, False sinon.
     """
-    if type_caracteristique in ["accessoires", "pilosite"]:
-        return valeur_caracteristique in donnees_personnage[type_caracteristique]
-
+    if list(donnees_personnage[type_caracteristique]) == [
+            valeur_caracteristique] and type_caracteristique != "accesoires" or "pilosite":
+        return True
+    elif [valeur_caracteristique] in list(donnees_personnage[type_caracteristique]) and type_caracteristique == \
+            "accesoires" or "pilosite":
+        return True
+    else:
+        return False
 
 def score_dichotomie(personnages_restants, type_caracteristique, valeur_caracteristique):
     """
