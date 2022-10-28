@@ -18,12 +18,12 @@ def types_caracteristiques_ordre_aleatoire():
     Returns:
         list: La liste des types de caractéristiques
     """
-    random.shuffle(list(CARACTERISTIQUES.keys()))
-    print(list)
+    print(CARACTERISTIQUES.keys())
+    print(list(CARACTERISTIQUES.keys()))
+    random.shuffle(CARACTERISTIQUES.keys())
+    print(CARACTERISTIQUES.keys())
     return list
 
-
-types_caracteristiques_ordre_aleatoire()
 
 
 def valeurs_ordre_aleatoire(type_caracteristique):
@@ -142,12 +142,11 @@ def selectionner_caracteristique(personnages_restants):
                                            List_caract_alea[m])
             scoreavant = 0
             if scoreavant <= scoreactuel:
-                scoreavant = scoreactuel
                 caract_optim = List_caract_alea[m]
                 type_caract_optim = List_type_caract_alea[i]
             m += 1
         i += 1
-    return (type_caract_optim,caract_optim)
+    return (type_caract_optim, caract_optim)
 
 
 def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_caracteristique, reponse):
