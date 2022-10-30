@@ -110,7 +110,7 @@ def score_dichotomie(personnages_restants, type_caracteristique, valeur_caracter
             personnages_ayant_la_caractéristique = 0
             personnages_ayant_la_caractéristique += 1
         i += 1
-    score = nombre_de_personnages_total - maximum(personnages_ayant_la_caractéristique,
+    score = nombre_de_personnages_total - max(personnages_ayant_la_caractéristique,
                                                   (nombre_de_personnages_total - personnages_ayant_la_caractéristique))
     return score
 
