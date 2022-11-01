@@ -105,16 +105,17 @@ def score_dichotomie(personnages_restants, type_caracteristique, valeur_caracter
     list_personnages_restants = list(personnages_restants)
     nombre_de_personnages_total = len(list_personnages_restants)
     i = 0
+    print(list_personnages_restants)
+    print(personnages_restants)
+    personnages_ayannt_la_caracteristique = 0
     while i != nombre_de_personnages_total:
-        if possede(list_personnages_restants[i], type_caracteristique, valeur_caracteristique):
+        if list_personnages_restants[i] == type_caracteristique and personnages_restants[list_personnages_restants[i]] == valeur_caracteristique:
             personnages_ayant_la_caractéristique = 0
             personnages_ayant_la_caractéristique += 1
         i += 1
     score = nombre_de_personnages_total - max(personnages_ayant_la_caractéristique,
                                                   (nombre_de_personnages_total - personnages_ayant_la_caractéristique))
     return score
-
-
 def selectionner_caracteristique(personnages_restants):
     """
     Parmi tous les couples type/valeur de caractéristiques, retourne
