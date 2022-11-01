@@ -103,18 +103,20 @@ def score_dichotomie(personnages_restants, type_caracteristique, valeur_caracter
         int: Le score
     """
     list_personnages_restants = list(personnages_restants)
-    nombre_de_personnages_total = len(list_personnages_restants)
     i = 0
+    while i!=len(list_personnages_restants):
+        print(personnages_restants[i])
+        i+=1
+    nombre_de_personnages_total = personnages_restants.value()
     print(list_personnages_restants)
-    print(personnages_restants)
-    personnages_ayannt_la_caracteristique = 0
+    print(nombre_de_personnages_total)
+    personnages_ayant_la_caracteristique = 0
     while i != nombre_de_personnages_total:
         if list_personnages_restants[i] == type_caracteristique and personnages_restants[list_personnages_restants[i]] == valeur_caracteristique:
-            personnages_ayant_la_caractéristique = 0
-            personnages_ayant_la_caractéristique += 1
+            personnages_ayant_la_caracteristique += 1
         i += 1
-    score = nombre_de_personnages_total - max(personnages_ayant_la_caractéristique,
-                                                  (nombre_de_personnages_total - personnages_ayant_la_caractéristique))
+    score = nombre_de_personnages_total - max(personnages_ayant_la_caracteristique,
+                                                  (nombre_de_personnages_total - personnages_ayant_la_caracteristique))
     return score
 def selectionner_caracteristique(personnages_restants):
     """
