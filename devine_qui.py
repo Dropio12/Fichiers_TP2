@@ -184,7 +184,7 @@ def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_
     Returns:
         dict: Le dictionnaire de personnages restants mis à jour.
     """
-    personnages_restants_mis_a_jour = personnages_restants #problème d'adresse: ne fait que modifier la liste des personnages et pas celle a jour (peut-être créer un autre dictionnaire a partir de perso_restant avec une boucle while pour rajouter chaque element)
+    personnages_restants_mis_a_jour = []  # problème d'adresse: ne fait que modifier la liste des personnages et pas celle a jour (peut-être créer un autre dictionnaire a partir de perso_restant avec une boucle while pour rajouter chaque element)
     liste_cara_personnages_restants = list(personnages_restants.values())
     liste_personnages_restants = list(personnages_restants.keys())
     nombre_de_personnages_total = len(liste_personnages_restants)
@@ -192,17 +192,18 @@ def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_
     print(personnages_restants)
     while i != nombre_de_personnages_total:
         if reponse:
-            if not possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
-                print(liste_personnages_restants[i])
-                del personnages_restants_mis_a_jour[f"{liste_personnages_restants[i]}"]
-                print(personnages_restants)
-        if not reponse:
             if possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
                 print(liste_personnages_restants[i])
-                del personnages_restants_mis_a_jour[f"{liste_personnages_restants[i]}"]
-                print(personnages_restants)
+                personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
+                print(personnages_restants_mis_a_jour)
+        if not reponse:
+            if not possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
+                print(liste_personnages_restants[i])
+                personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
+                print(personnages_restants_mis_a_jour)
         i += 1
     return personnages_restants_mis_a_jour
+
 
 
 if __name__ == '__main__':
