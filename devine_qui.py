@@ -16,9 +16,9 @@ def types_caracteristiques_ordre_aleatoire():
     Returns:
         list: La liste des types de caractéristiques
     """
-    liste_type_caracteristique = list(CARACTERISTIQUES.keys())
-    shuffle(liste_type_caracteristique)
-    return liste_type_caracteristique
+    liste_type_caracteristique = list(CARACTERISTIQUES.keys())  # liste des types de caractéristiques #
+    shuffle(liste_type_caracteristique)  # mélange la liste
+    return liste_type_caracteristique  # retourne la liste
 
 
 def valeurs_ordre_aleatoire(type_caracteristique):
@@ -36,9 +36,9 @@ def valeurs_ordre_aleatoire(type_caracteristique):
     Returns:
         list: La liste des valeurs possibles pour ce type de caractéristique
     """
-    liste_caracteristique = list.copy(CARACTERISTIQUES[type_caracteristique])
-    shuffle(liste_caracteristique)
-    return liste_caracteristique
+    liste_caracteristique = list.copy(CARACTERISTIQUES[type_caracteristique])  # liste des valeurs de caractéristiques
+    shuffle(liste_caracteristique)  # mélange la liste
+    return liste_caracteristique  # retourne la liste des caractéristiques mélangés
 
 
 def possede(donnees_personnage, type_caracteristique, valeur_caracteristique):
@@ -59,12 +59,15 @@ def possede(donnees_personnage, type_caracteristique, valeur_caracteristique):
         bool: True si le personnage possède la caractéristique, False sinon.
     """
 
-    if type_caracteristique == "accessoires" or type_caracteristique == "pilosite":
-        if donnees_personnage[type_caracteristique] == [valeur_caracteristique]:
+    if type_caracteristique == "accessoires" or type_caracteristique == "pilosite":  # si le type est accessoires ou
+        # pilosite
+        if donnees_personnage[type_caracteristique] == [valeur_caracteristique]:  # si la valeur est dans les données
+            # du personnage, retourne True
             return True
-        else:
+        else:  # si la valeur n'est pas dans les données du personnage, , on retourne False
             return False
-    else:
+    else:  # si le type n'est pas accessoires ou pilosite et que la valeur est dans les données du personnage,
+        # retourne True. Sinon, retourne False.
         if donnees_personnage[type_caracteristique] == valeur_caracteristique:
             return True
         else:
@@ -101,27 +104,34 @@ def score_dichotomie(personnages_restants, type_caracteristique, valeur_caracter
     Returns:
         int: Le score
     """
-    liste_personnages_restants = list(personnages_restants.keys())
-    liste_caracteristique_personnages_restants = list(personnages_restants.values())
-    nombre_de_personnages_total = len(liste_personnages_restants)
-    personnages_ayant_la_caracteristique = 0
-    i = 0
-    while i != nombre_de_personnages_total:
-        k = 0
-        while k != len(liste_caracteristique_personnages_restants[i].keys()):
+    liste_personnages_restants = list(personnages_restants.keys())  # liste des personnages restants
+    liste_caracteristique_personnages_restants = list(personnages_restants.values())  # liste des caractéristiques des
+    # personnages restants
+    nombre_de_personnages_total = len(liste_personnages_restants)  # nombre de personnages total
+    personnages_ayant_la_caracteristique = 0  # nombre de personnages ayant la caractéristique
+    i = 0  # compteur 1
+    while i != nombre_de_personnages_total:  # tant que le compteur 1 n'est pas égal au nombre de personnages total
+        k = 0  # compteur 2
+        while k != len(liste_caracteristique_personnages_restants[i].keys()):  # tant que le compteur 2 n'est pas
+            # égal au nombre de caractéristiques des personnages restants
             if list(liste_caracteristique_personnages_restants[i].keys())[k] == type_caracteristique and (
-                    type_caracteristique == "accessoires" or type_caracteristique == "pilosite"):
-                t = 0
+                    type_caracteristique == "accessoires" or type_caracteristique == "pilosite"):  # si le type est
+                # accessoires ou pilosite
+                t = 0  # compteur 3
                 while t != len(liste_caracteristique_personnages_restants[i].values()):
-                    if valeur_caracteristique == list(liste_caracteristique_personnages_restants[i].values())[t]:
+                    if valeur_caracteristique == list(liste_caracteristique_personnages_restants[i].values())[t]:  #
+                        # si la valeur est dans les données du personnage, on ajoute 1 au nombre de personnages ayant
+                        # la caractéristique
                         personnages_ayant_la_caracteristique += 1
                     t += 1
-            elif list(liste_caracteristique_personnages_restants[i].keys())[k] == type_caracteristique:
+            elif list(liste_caracteristique_personnages_restants[i].keys())[k] == type_caracteristique:  # si le type
+                # n'est pas accessoires ou pilosite
                 if valeur_caracteristique in list(liste_caracteristique_personnages_restants[i].values())[k]:
-                    personnages_ayant_la_caracteristique += 1
-            k += 1
-        i += 1
-
+                    personnages_ayant_la_caracteristique += 1  # si la valeur est dans les données du personnage,
+                    # on ajoute 1 au nombre de personnages ayant la caractéristique
+            k += 1  # on incrémente le compteur 2
+        i += 1  # on incrémente le compteur 1
+    # on sépare ceux qui ont de la pilosité et des accessoires des autres, car ils sont dans des listes
     score = nombre_de_personnages_total - max(personnages_ayant_la_caracteristique,
                                               (nombre_de_personnages_total - personnages_ayant_la_caracteristique))
     return score
@@ -142,17 +152,22 @@ def selectionner_caracteristique(personnages_restants):
     Returns:
         (string, string): Le type et la valeur ayant le meilleur score dichotomique
     """
-    liste_type_caracteristiques = [types_caracteristiques_ordre_aleatoire()]
-    liste_type_caracteristiques = list(liste_type_caracteristiques)[0]
-    a = 0
-    score_avant = 0
-    type_caract = ""
-    valeur = ""
+    liste_type_caracteristiques = [types_caracteristiques_ordre_aleatoire()]  # liste des types de caractéristiques
+    liste_type_caracteristiques = list(liste_type_caracteristiques)[0]  # on transforme la liste en liste de liste
+    # pour enlever les []
+    a = 0  # compteur 1
+    score_avant = 0  # le score final va être stocké dans cette variable
+    type_caract = ""  # type de caractéristique
+    valeur = ""  # valeur de la caractéristique
     while len(liste_type_caracteristiques) != a:
-        liste_caracteristiques = [valeurs_ordre_aleatoire(liste_type_caracteristiques[a])]
-        liste_caracteristiques = list(liste_caracteristiques)[0]
-        c = 0
-        while len(liste_caracteristiques) != c:
+        liste_caracteristiques = [valeurs_ordre_aleatoire(liste_type_caracteristiques[a])]  # liste des caractéristiques
+        liste_caracteristiques = list(liste_caracteristiques)[
+            0]  # on transforme la liste en liste de liste pour enlever
+        # les []
+        c = 0  # compteur 2
+        while len(liste_caracteristiques) != c:  # tant que le compteur 2 n'est pas égal au nombre de caractéristiques,
+            # on passe toute les caractéristiques du type donné plus haut et on trouve le meilleur score, on le stocke
+            # dans score_avant et on stocke le type et la valeur dans type_caract et valeur
             score_actuel = [
                 score_dichotomie(personnages_restants, liste_type_caracteristiques[a], liste_caracteristiques[c])]
             if score_actuel[0] >= score_avant:
@@ -183,20 +198,21 @@ def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_
     Returns:
         dict: Le dictionnaire de personnages restants mis à jour.
     """
-    liste_cara_personnages_restants = list(personnages_restants.values())
-    personnages_restants_a_jour = {}
-    liste_personnages_restants = list(personnages_restants.keys())
-    nombre_de_personnages_total = len(liste_personnages_restants)
+    liste_cara_personnages_restants = list(personnages_restants.values())  # liste des caractéristiques des personnages
+    liste_personnages_restants = list(personnages_restants.keys())  # liste des personnages restants
+    nombre_de_personnages_total = len(liste_personnages_restants)  # nombre de personnages restants
+    personnages_restants_a_jour = {}  # dictionnaire des personnages restants à jour
     k = 0
-    while k != len(personnages_restants):
+    i = 0
+    while k != len(personnages_restants):  # passe à travers tous les personnages restants et crée une copie du
+        # dictionnaire personnages_restants
         personnages_restants_a_jour[list(personnages_restants.keys())[k]] = list(personnages_restants.values())[k]
         k += 1
-    i = 0
-    while i != nombre_de_personnages_total:
-        if reponse:
+    while i != nombre_de_personnages_total:  # passe à travers tous les personnages restants
+        if reponse:  # si la réponse est oui, on enlève les personnages qui possèdent la caractéristique
             if not possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
                 del personnages_restants_a_jour[liste_personnages_restants[i]]
-        if not reponse:
+        if not reponse:  # si la réponse est non, on enlève les personnages qui ne possèdent pas la caractéristique
             if possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
                 del personnages_restants_a_jour[liste_personnages_restants[i]]
         i += 1
@@ -230,6 +246,7 @@ if __name__ == '__main__':
 
     # Aucun test n'est fourni pour selectionner_caracteristiques
     assert selectionner_caracteristique(personnages) == ('genre', 'homme') or ('genre', 'femme')
+    assert selectionner_caracteristique(personnages) != ('accessoires', 'chapeau')
     # Tests de la fonction mettre_a_jour_hypotheses
     assert len(mettre_a_jour_hypotheses(personnages, 'genre', 'homme', True)) == 3
     assert len(mettre_a_jour_hypotheses(personnages, 'genre', 'homme', False)) == 2
