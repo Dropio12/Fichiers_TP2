@@ -40,6 +40,7 @@ def valeurs_ordre_aleatoire(type_caracteristique):
     """
     CARACT3 = list.copy(CARACTERISTIQUES[type_caracteristique])
     random.shuffle(CARACT3)
+    print(CARACT3)
     return CARACT3
 
 
@@ -118,8 +119,7 @@ def score_dichotomie(personnages_restants, type_caracteristique, valeur_caracter
                     if valeur_caracteristique == list(liste_caractéristique_personnages_restants[i].values())[t]:
                         personnages_ayant_la_caracteristique += 1
                     t += 1
-            elif list(liste_caractéristique_personnages_restants[i].keys())[k] == type_caracteristique and (
-                    type_caracteristique != "accessoires" or type_caracteristique != "pilosite"):
+            elif list(liste_caractéristique_personnages_restants[i].keys())[k] == type_caracteristique:
                 if valeur_caracteristique in list(liste_caractéristique_personnages_restants[i].values())[k]:
                     personnages_ayant_la_caracteristique += 1
             k += 1
@@ -145,24 +145,29 @@ def selectionner_caracteristique(personnages_restants):
     Returns:
         (string, string): Le type et la valeur ayant le meilleur score dichotomique
     """
-    # i = 0
-    # Liste_type_caract_alea = list(types_caracteristiques_ordre_aleatoire())
-    # print(types_caracteristiques_ordre_aleatoire())
-    # while i != len(Liste_type_caract_alea):
-    #    m = 0
-    #    Liste_caract_alea = valeurs_ordre_aleatoire(Liste_type_caract_alea[i])
-    #    print(Liste_caract_alea)
-    #    while m != len(Liste_caract_alea):
-    #        scoreactuel = score_dichotomie(personnages_restants, Liste_type_caract_alea[i],
-    #                                       Liste_caract_alea[m])
-    #        scoreavant = 0
-    #        if scoreavant <= scoreactuel:
-    #            caract_optim = Liste_caract_alea[m]
-    #            type_caract_optim = Liste_type_caract_alea[i]
-    #        m += 1
-    #    i += 1
-    # print(f'{type_caract_optim} et {caract_optim}')
-    # return (type_caract_optim, caract_optim)
+    a = 0
+    # print(types_caracteristiques_ordre_aleatoire()
+    d = []
+    d.append(types_caracteristiques_ordre_aleatoire())
+    d = list(d)[0]
+    scoreavant = 0
+    while len(d) != a:
+        s = []
+        s.append(valeurs_ordre_aleatoire(d[a]))
+        s = list(s)[0]
+        c = 0
+        while len(s) != c:
+            score_actuel = []
+            score_actuel.append(score_dichotomie(personnages_restants, d[a], s[c]))
+            if score_actuel[0] >= scoreavant:
+                scoreavant += score_actuel[0]
+                type = d[a]
+                valeur = s[c]
+            c += 1
+        a += 1
+    print(type)
+    print(valeur)
+    return type, valeur
 
 
 def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_caracteristique, reponse):
@@ -189,21 +194,15 @@ def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_
     liste_personnages_restants = list(personnages_restants.keys())
     nombre_de_personnages_total = len(liste_personnages_restants)
     i = 0
-    print(personnages_restants)
     while i != nombre_de_personnages_total:
         if reponse:
             if possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
-                print(liste_personnages_restants[i])
                 personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
-                print(personnages_restants_mis_a_jour)
         if not reponse:
             if not possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
-                print(liste_personnages_restants[i])
                 personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
-                print(personnages_restants_mis_a_jour)
         i += 1
     return personnages_restants_mis_a_jour
-
 
 
 if __name__ == '__main__':
@@ -228,6 +227,7 @@ if __name__ == '__main__':
                    'Maria': {'genre': 'femme', 'accessoires': ['chapeau']}}
 
     selectionner_caracteristique(personnages)
+
     assert score_dichotomie(personnages, 'genre', 'homme') == 2  # = 5 - max(3, 2)
     assert score_dichotomie(personnages, 'accessoires', 'chapeau') == 0  # = 5 - max(5, 0)
 
