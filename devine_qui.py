@@ -40,7 +40,6 @@ def valeurs_ordre_aleatoire(type_caracteristique):
     """
     CARACT3 = list.copy(CARACTERISTIQUES[type_caracteristique])
     random.shuffle(CARACT3)
-    print(CARACT3)
     return CARACT3
 
 
@@ -146,7 +145,6 @@ def selectionner_caracteristique(personnages_restants):
         (string, string): Le type et la valeur ayant le meilleur score dichotomique
     """
     a = 0
-    # print(types_caracteristiques_ordre_aleatoire()
     d = []
     d.append(types_caracteristiques_ordre_aleatoire())
     d = list(d)[0]
@@ -165,8 +163,6 @@ def selectionner_caracteristique(personnages_restants):
                 valeur = s[c]
             c += 1
         a += 1
-    print(type)
-    print(valeur)
     return type, valeur
 
 
@@ -189,20 +185,25 @@ def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_
     Returns:
         dict: Le dictionnaire de personnages restants mis à jour.
     """
-    personnages_restants_mis_a_jour = []  # problème d'adresse: ne fait que modifier la liste des personnages et pas celle a jour (peut-être créer un autre dictionnaire a partir de perso_restant avec une boucle while pour rajouter chaque element)
     liste_cara_personnages_restants = list(personnages_restants.values())
+    personnages_restants_={}
+    k=0
+    while k != len(personnages_restants):
+        personnages_restants_[list(personnages_restants.keys())[k]]=list(personnages_restants.values())[k]
+        k+=1
     liste_personnages_restants = list(personnages_restants.keys())
     nombre_de_personnages_total = len(liste_personnages_restants)
     i = 0
     while i != nombre_de_personnages_total:
         if reponse:
-            if possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
-                personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
-        if not reponse:
             if not possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
-                personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
+                #personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
+                del personnages_restants_[liste_personnages_restants[i]]
+        if not reponse:
+            if possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
+                del personnages_restants_[liste_personnages_restants[i]]
         i += 1
-    return personnages_restants_mis_a_jour
+    return personnages_restants_
 
 
 if __name__ == '__main__':
@@ -226,13 +227,12 @@ if __name__ == '__main__':
                    'George': {'genre': 'homme', 'accessoires': ['chapeau']},
                    'Maria': {'genre': 'femme', 'accessoires': ['chapeau']}}
 
-    selectionner_caracteristique(personnages)
-
     assert score_dichotomie(personnages, 'genre', 'homme') == 2  # = 5 - max(3, 2)
     assert score_dichotomie(personnages, 'accessoires', 'chapeau') == 0  # = 5 - max(5, 0)
+    score_dichotomie(personnages, 'genre', 'homme')
 
     # Aucun test n'est fourni pour selectionner_caracteristiques
-
+    assert selectionner_caracteristique(personnages) == ('genre', 'homme') or ('genre', 'femme')
     # Tests de la fonction mettre_a_jour_hypotheses
     assert len(mettre_a_jour_hypotheses(personnages, 'genre', 'homme', True)) == 3
     assert len(mettre_a_jour_hypotheses(personnages, 'genre', 'homme', False)) == 2
