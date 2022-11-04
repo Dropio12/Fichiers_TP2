@@ -1,7 +1,5 @@
-from random import shuffle
-
 from personnages import CARACTERISTIQUES
-import random
+from random import shuffle
 
 
 def types_caracteristiques_ordre_aleatoire():
@@ -18,9 +16,9 @@ def types_caracteristiques_ordre_aleatoire():
     Returns:
         list: La liste des types de caractéristiques
     """
-    CARACT_TYPE_LIST = list(CARACTERISTIQUES.keys())
-    random.shuffle(CARACT_TYPE_LIST)
-    return CARACT_TYPE_LIST
+    liste_type_caracteristique = list(CARACTERISTIQUES.keys())
+    shuffle(liste_type_caracteristique)
+    return liste_type_caracteristique
 
 
 def valeurs_ordre_aleatoire(type_caracteristique):
@@ -38,9 +36,9 @@ def valeurs_ordre_aleatoire(type_caracteristique):
     Returns:
         list: La liste des valeurs possibles pour ce type de caractéristique
     """
-    CARACT3 = list.copy(CARACTERISTIQUES[type_caracteristique])
-    random.shuffle(CARACT3)
-    return CARACT3
+    liste_caracteristique = list.copy(CARACTERISTIQUES[type_caracteristique])
+    shuffle(liste_caracteristique)
+    return liste_caracteristique
 
 
 def possede(donnees_personnage, type_caracteristique, valeur_caracteristique):
@@ -104,22 +102,22 @@ def score_dichotomie(personnages_restants, type_caracteristique, valeur_caracter
         int: Le score
     """
     liste_personnages_restants = list(personnages_restants.keys())
-    liste_caractéristique_personnages_restants = list(personnages_restants.values())
+    liste_caracteristique_personnages_restants = list(personnages_restants.values())
     nombre_de_personnages_total = len(liste_personnages_restants)
     personnages_ayant_la_caracteristique = 0
     i = 0
     while i != nombre_de_personnages_total:
         k = 0
-        while k != len(liste_caractéristique_personnages_restants[i].keys()):
-            if list(liste_caractéristique_personnages_restants[i].keys())[k] == type_caracteristique and (
+        while k != len(liste_caracteristique_personnages_restants[i].keys()):
+            if list(liste_caracteristique_personnages_restants[i].keys())[k] == type_caracteristique and (
                     type_caracteristique == "accessoires" or type_caracteristique == "pilosite"):
                 t = 0
-                while t != len(liste_caractéristique_personnages_restants[i].values()):
-                    if valeur_caracteristique == list(liste_caractéristique_personnages_restants[i].values())[t]:
+                while t != len(liste_caracteristique_personnages_restants[i].values()):
+                    if valeur_caracteristique == list(liste_caracteristique_personnages_restants[i].values())[t]:
                         personnages_ayant_la_caracteristique += 1
                     t += 1
-            elif list(liste_caractéristique_personnages_restants[i].keys())[k] == type_caracteristique:
-                if valeur_caracteristique in list(liste_caractéristique_personnages_restants[i].values())[k]:
+            elif list(liste_caracteristique_personnages_restants[i].keys())[k] == type_caracteristique:
+                if valeur_caracteristique in list(liste_caracteristique_personnages_restants[i].values())[k]:
                     personnages_ayant_la_caracteristique += 1
             k += 1
         i += 1
@@ -144,26 +142,26 @@ def selectionner_caracteristique(personnages_restants):
     Returns:
         (string, string): Le type et la valeur ayant le meilleur score dichotomique
     """
+    liste_type_caracteristiques = [types_caracteristiques_ordre_aleatoire()]
+    liste_type_caracteristiques = list(liste_type_caracteristiques)[0]
     a = 0
-    d = []
-    d.append(types_caracteristiques_ordre_aleatoire())
-    d = list(d)[0]
-    scoreavant = 0
-    while len(d) != a:
-        s = []
-        s.append(valeurs_ordre_aleatoire(d[a]))
-        s = list(s)[0]
+    score_avant = 0
+    type_caract = ""
+    valeur = ""
+    while len(liste_type_caracteristiques) != a:
+        liste_caracteristiques = [valeurs_ordre_aleatoire(liste_type_caracteristiques[a])]
+        liste_caracteristiques = list(liste_caracteristiques)[0]
         c = 0
-        while len(s) != c:
-            score_actuel = []
-            score_actuel.append(score_dichotomie(personnages_restants, d[a], s[c]))
-            if score_actuel[0] >= scoreavant:
-                scoreavant += score_actuel[0]
-                type = d[a]
-                valeur = s[c]
+        while len(liste_caracteristiques) != c:
+            score_actuel = [
+                score_dichotomie(personnages_restants, liste_type_caracteristiques[a], liste_caracteristiques[c])]
+            if score_actuel[0] >= score_avant:
+                score_avant += score_actuel[0]
+                type_caract = liste_type_caracteristiques[a]
+                valeur = liste_caracteristiques[c]
             c += 1
         a += 1
-    return type, valeur
+    return type_caract, valeur
 
 
 def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_caracteristique, reponse):
@@ -186,24 +184,23 @@ def mettre_a_jour_hypotheses(personnages_restants, type_caracteristique, valeur_
         dict: Le dictionnaire de personnages restants mis à jour.
     """
     liste_cara_personnages_restants = list(personnages_restants.values())
-    personnages_restants_={}
-    k=0
-    while k != len(personnages_restants):
-        personnages_restants_[list(personnages_restants.keys())[k]]=list(personnages_restants.values())[k]
-        k+=1
+    personnages_restants_a_jour = {}
     liste_personnages_restants = list(personnages_restants.keys())
     nombre_de_personnages_total = len(liste_personnages_restants)
+    k = 0
+    while k != len(personnages_restants):
+        personnages_restants_a_jour[list(personnages_restants.keys())[k]] = list(personnages_restants.values())[k]
+        k += 1
     i = 0
     while i != nombre_de_personnages_total:
         if reponse:
             if not possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
-                #personnages_restants_mis_a_jour.append(liste_personnages_restants[i])
-                del personnages_restants_[liste_personnages_restants[i]]
+                del personnages_restants_a_jour[liste_personnages_restants[i]]
         if not reponse:
             if possede(liste_cara_personnages_restants[i], type_caracteristique, valeur_caracteristique):
-                del personnages_restants_[liste_personnages_restants[i]]
+                del personnages_restants_a_jour[liste_personnages_restants[i]]
         i += 1
-    return personnages_restants_
+    return personnages_restants_a_jour
 
 
 if __name__ == '__main__':
